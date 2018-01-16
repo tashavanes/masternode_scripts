@@ -1,0 +1,14 @@
+#!/bin/bash
+
+n=1
+
+cd ~/.sucrcore/sentinel
+
+while [ $n -le 10000 ] 
+do
+       echo "starting Sentinel..." $n
+       ./venv/bin/python bin/sentinel.py
+       sleep 60
+       n=$(( n+1 ))
+done
+

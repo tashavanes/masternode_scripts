@@ -1,0 +1,35 @@
+#!/bin/bash
+#Script to monitor goings on of masternnode
+n=1
+coin="Sucre"
+addr1="Si7JhGASVMb3i6ipYujtPJzD5hwEsoFn4c"
+addr2="SccmmPrCWeA7KfK1f6rDoXAFckmS9vqJFu"
+addr3=""
+
+while [ $n -le 10000 ]
+do
+   echo "Monitoring" $coin
+   echo "Current script run is" $n 
+   echo "Current mining block is:" 
+   sucr-cli masternode current | grep "height"
+
+    for lookup in $addr1 $addr2 $addr3 
+       do
+          echo "Address is" $lookup
+          echo "Masternode status:"
+          sucr-cli masternode status | grep status  
+          echo "Upcoming address for payment?"
+          payout=$(sucr-cli masternode winners | grep $lookup )
+          if [[ $payout ]]
+            then 
+              echo $coin "is coming up (block, payee)" $payout 
+              echo $payout >> ~/sucr_log_$lookup
+          else
+              echo "No upcoming payment"  
+          fi
+        echo "Payment list:"
+          sucr-cli masternode winners
+     done
+   sleep 60 
+   n=$(( n+1 ))
+done

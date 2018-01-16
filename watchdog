@@ -1,0 +1,9 @@
+#!/bin/bash
+
+n=1
+while [ $n -le 1000 ] 
+do
+     ./Desire/src/desire-cli masternode list full | grep D9zvwQuZBbW89ZaPt6jTLSFCY3TKWikXez
+     sucr-cli masternode list full | grep Si7JhGASVMb3i6ipYujtPJzD5hwEsoFn4c
+     sleep 30
+done
