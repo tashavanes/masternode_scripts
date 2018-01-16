@@ -1,14 +1,43 @@
+# This script is for Linux masternodes with Sentinel issues, where Sentinel isn't running properly from the command line.
+# Sentinel is a network process akin to a heartbeat to tell the network the masternode is up and running.
+# Therefore, if Sentinel is not running often enough, wallets will report the masternode is in "Watchdog_Expired" status.
+# Typically, Sentinel is run via a cronjob that fires every minute, but this does not work for all installations.
+#
+# Usage
+# 1. CD to your home directory (`cd ~`)
+# 2. Open a file to write into (`nano startsent`)
+# 3. Copy contents of this script to the open file; to save, Control + X
+# 4. Adjust any variable settings to reflect your Sentinel path correctly, and set the number of loops, or 0 for continuous.
+# 5. Set the execute bit on the file (`chmod +x startsent)
+# 5. Run the script (`./startsent &') - exit the terminal if you want.
+#       If you keep the terminal open, script will provide information to the terminal.
+# 6. Let the script run and watch for your Wallet's status to change to "Enabled"
+#
+# For additional help please contact sundaypi@protonmail.com or find me (@sundaypi) on Sucre discord.
+#
 #!/bin/bash
+coin="Sucre"
+dir=~/.sucrcore/sentinel/
 
+# Set to 0 for infinite loop, 1 for finite loop
 n=1
 
-cd ~/.sucrcore/sentinel
+# Set max runs if not infinite
+times=10
 
-while [ $n -le 10000 ] 
+cd $dir
+
+
+while [[ $n -le $times ]] 
 do
-       echo "starting Sentinel..." $n
-       ./venv/bin/python bin/sentinel.py
+     if [[ $n -gt 0 ]];
+       then
+         echo "Run number" $n
+         n=$(( n+1 ))
+     fi
+
+       echo "starting Sentinel for" $coin
+       ./venv/bin/python bin/sentinel.py >> sentinel.log
        sleep 60
-       n=$(( n+1 ))
 done
 
